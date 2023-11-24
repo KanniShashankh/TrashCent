@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import './maps.dart';
 import './login.dart';
 
 void main() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'pageMul/map.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       }),
     ),
+    MapPage(),
     PlaceholderWidget(Colors.green)
   ];
 
