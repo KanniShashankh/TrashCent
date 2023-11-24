@@ -75,6 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'GPS',
+            backgroundColor: Colors.red,
           ),
           BottomNavigationBarItem(
             icon: GestureDetector(
@@ -84,10 +90,17 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Icon(Icons.camera),
             ),
             label: 'Camera',
+            backgroundColor: Colors.yellow,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'abc',
+            backgroundColor: Colors.purple,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
+            backgroundColor: Colors.orange,
           )
         ],
       ),
