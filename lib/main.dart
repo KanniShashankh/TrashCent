@@ -52,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mail),
-            label: 'Messages',
+            icon: Icon(Icons.camera),
+            label: 'Camera',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -77,3 +77,4 @@ class PlaceholderWidget extends StatelessWidget {
     );
   }
 }
+  
