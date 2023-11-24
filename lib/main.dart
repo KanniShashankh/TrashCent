@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'pageMul/map.dart';
@@ -68,6 +69,37 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Flutter App'),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Reward Points'),
+                      content: Text('Your random reward points: ${Random().nextInt(100)}'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('Close'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Icon(
+                Icons.star,  // You can choose any icon you like
+                size: 26.0,
+              ),
+            )
+          ),
+        ],
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -77,12 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.red[100],
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'GPS',
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.red[100],
           ),
           BottomNavigationBarItem(
             icon: GestureDetector(
@@ -92,17 +124,17 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Icon(Icons.camera),
             ),
             label: 'Camera',
-            backgroundColor: Colors.yellow,
+            backgroundColor: Colors.red[100],
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'abc',
-            backgroundColor: Colors.purple,
+            backgroundColor: Colors.red[100],
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
-            backgroundColor: Colors.orange,
+            backgroundColor: Colors.red[100],
           )
         ],
       ),
