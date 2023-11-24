@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import './maps.dart';
+import './login.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
+      home: LoginPage(),
     );
   }
 }
@@ -21,26 +23,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    GridView.count(
-      crossAxisCount: 2,
-      children: List.generate(4, (index) {
-        return Center(
-          child: Card(
-            child: InkWell(
-              onTap: () {
-                print('Card $index tapped');
-              },
-              child: Container(
-                width: 150,
-                height: 150,
-                child: Center(child: Text('Tile $index')),
-              ),
-            ),
-          ),
-        );
-      }),
-    ),
+  final List<Widget> _children = [̀
+    PlaceholderWidget(Colors.white),
     PlaceholderWidget(Colors.green)
   ];
 
