@@ -5,7 +5,17 @@ import 'pageMul/map.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+// import 'package:fluttertoast/fluttertoast.dart';
 
+// GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+// void main() => runApp(
+//       MaterialApp(
+//         builder: FToastBuilder(),
+//         home: MyApp(),
+//         navigatorKey: navigatorKey,
+//       ),
+//     );
 void main() {
   runApp(MyApp());
 }
@@ -98,8 +108,27 @@ class _MyHomePageState extends State<MyHomePage> {
           );
 
           if (response.statusCode == 200) {
-            print('Image uploaded successfully');
-            print(jsonDecode(response.body));
+            // print('Image uploaded successfully');
+            var data = jsonDecode(response.body);
+            // print(jsonDecode(response.body));
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Model Prediction'),
+                  content: Text(
+                      'Your Trash is classified as : ${data['predicted_class']}'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Close'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
           } else {
             print('Error uploading image. Status code: ${response.statusCode}');
           }
@@ -124,7 +153,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Flutter App'),
+        title: Text(
+          'TrashCent',
+        ),
+        backgroundColor: Colors.grey,
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20.0),
@@ -167,8 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Colors.red,
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'GPS',
+            icon: Icon(Icons.map_outlined),
+            label: 'Bin Locator',
             backgroundColor: Colors.red,
           ),
           BottomNavigationBarItem(
@@ -181,11 +213,11 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Camera',
             backgroundColor: Colors.red,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'abc',
-            backgroundColor: Colors.red,
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.person),
+          //   label: 'abc',
+          //   backgroundColor: Colors.red,
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
