@@ -2,9 +2,38 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'pageMul/map.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
+}
+
+class Prediction {
+  final List<double> class_probabilities;
+  final double max_probability;
+  final String predicted_class;
+
+  const Prediction(
+      {required this.class_probabilities,
+      required this.max_probability,
+      required this.predicted_class});
+
+  factory Prediction.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {
+        'class_probabilities': List<double> class_probabilities,
+        'maximum_probability': double max_probability,
+        'predicted_class': String predicted_class,
+      } =>
+        Prediction(
+            class_probabilities: class_probabilities,
+            max_probability: max_probability,
+            predicted_class: predicted_class),
+      _ => throw const FormatException('Failed to load TrashNet.'),
+    };
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -44,17 +73,44 @@ class _MyHomePageState extends State<MyHomePage> {
       }),
     ),
     MapPage(),
-    PlaceholderWidget(Colors.green)
+    PlaceholderWidget(Colors.green),
+    PlaceholderWidget(Colors.red)
   ];
-
   Future<void> _openCamera() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
 
-    if (pickedFile != null) {
-      // Do something with the image file
-    } else {
-      print('No image selected.');
+    try {
+      final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+      if (pickedFile != null) {
+        final File imageFile = File(pickedFile.path);
+        List<int> imageBytes = await imageFile.readAsBytes();
+        String base64Image = base64Encode(imageBytes);
+
+        print("Sending image to API");
+        print(base64Image);
+
+        try {
+          final response = await http.post(
+            Uri.parse('http://10.10.8.83:3000/predict'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'image': base64Image}),
+          );
+
+          if (response.statusCode == 200) {
+            print('Image uploaded successfully');
+            print(jsonDecode(response.body));
+          } else {
+            print('Error uploading image. Status code: ${response.statusCode}');
+          }
+        } catch (e) {
+          print('Error sending HTTP request: $e');
+        }
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
     }
   }
 
@@ -71,34 +127,33 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('My Flutter App'),
         actions: <Widget>[
           Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Reward Points'),
-                      content: Text('Your random reward points: ${Random().nextInt(100)}'),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text('Close'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Icon(
-                Icons.star,  // You can choose any icon you like
-                size: 26.0,
-              ),
-            )
-          ),
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Reward Points'),
+                        content: Text(
+                            'Your random reward points: ${Random().nextInt(100)}'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Close'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Icon(
+                  Icons.star, // You can choose any icon you like
+                  size: 26.0,
+                ),
+              )),
         ],
       ),
       body: _children[_currentIndex],
@@ -106,12 +161,12 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: onTabTapped,
         currentIndex: _currentIndex,
         items: [
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
             backgroundColor: Colors.red[100],
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'GPS',
             backgroundColor: Colors.red[100],
